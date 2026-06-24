@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuiz Premium Pemakanan Seimbang | Rahsoa Studio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --primary: #00f2fe;
+    --primary-glow: rgba(0, 242, 254, 0.4);
+    --secondary: #4facfe;
+    --accent: #00ff87;
+    --accent-glow: rgba(0, 255, 135, 0.3);
+    --bg-dark: #060b19;
+    --card-bg: rgba(15, 23, 42, 0.65);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-glow: rgba(255, 255, 255, 0.08);
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body{
+    min-height: 100vh;
+    background: radial-gradient(circle at 50% 0%, #101f42 0%, var(--bg-dark) 70%);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 20px 60px 20px;
+    overflow-x: hidden;
+}
+
+/* Banner Futuristik */
+.banner{
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-glow);
+    color: white;
+    text-align: center;
+    padding: 20px 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 600px;
+    margin: 20px auto 30px auto;
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.banner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+}
+
+.banner h2 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    background: linear-gradient(to right, #fff, var(--text-muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.banner a{
+    color: #000;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    background: var(--primary);
+    padding: 10px 24px;
+    border-radius: 14px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 20px var(--primary-glow);
+}
+
+.banner a:hover {
+    transform: translateY(-3px) scale(1.05);
+    background: #fff;
+    box-shadow: 0 0 30px rgba(255,255,255,0.6);
+}
+
+/* Bekas Kuiz */
+.quiz-container {
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+}
+
+.audio-status {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+    text-align: center;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Bar Kemajuan Aura */
+.progress-container {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    height: 10px;
+    border-radius: 20px;
+    margin-bottom: 35px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.02);
+}
+
+.progress-bar {
+    height: 100%;
+    width: 10%;
+    background: linear-gradient(90deg, var(--secondary), var(--primary), var(--accent));
+    box-shadow: 0 0 15px var(--primary-glow);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Kad Soalan Glassmorphism */
+.card{
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 32px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+    border: 1px solid var(--border-glow);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: none;
+    position: relative;
+}
+
+.card.active {
+    display: block;
+    animation: slideIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Gaya Imej Soalan */
+.question-img {
+    width: 100%;
+    max-width: 220px;
+    display: block;
+    margin: 0 auto 20px auto;
+    border-radius: 16px;
+    border: 2px solid var(--primary);
+    box-shadow: 0 0 15px var(--primary-glow);
+    object-fit: cover;
+    height: 140px;
+}
+
+/* Tag Kategori Di Atas */
+.category-tag {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.cat-matematik { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
+.cat-sains { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); }
+.cat-pk { background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3); }
+
+h1{
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.card-question {
+    color: var(--text-main);
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+/* Rekabentuk Pilihan Cyber */
+.options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 30px;
+}
+
+.option-btn {
+    width: 100%;
+    padding: 18px 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: #cbd5e1;
+    position: relative;
+    overflow: hidden;
+}
+
+.option-btn:hover {
+    border-color: rgba(0, 242, 254, 0.5);
+    background: rgba(0, 242, 254, 0.05);
+    color: #fff;
+    transform: translateX(4px);
+}
+
+.option-btn.selected {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+    color: var(--primary);
+    font-weight: 700;
+    box-shadow: inset 0 0 15px rgba(0, 242, 254, 0.1);
+}
+
+/* Navigasi Butang Neon */
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn {
+    flex: 1;
+    padding: 18px;
+    border: none;
+    border-radius: 18px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-next {
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
+    color: #060b19;
+    box-shadow: 0 8px 25px var(--primary-glow);
+}
+
+.btn-next:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 242, 254, 0.6);
+    filter: brightness(1.1);
+}
+
+.btn-next:disabled {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255,255,255,0.02);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Kad Keputusan */
+#keputusan {
+    text-align: center;
+}
+
+.score-badge {
+    font-size: 4.5rem;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 10px 0;
+    animation: pulseGlow 1.5s infinite alternate;
+}
+
+@keyframes pulseGlow {
+    from { filter: drop-shadow(0 0 10px var(--primary-glow)); }
+    to { filter: drop-shadow(0 0 25px var(--primary-glow)) scale(1.03); }
+}
+
+.review-box {
+    max-height: 280px; 
+    overflow-y: auto; 
+    padding-right: 8px;
+    margin: 25px 0;
+}
+
+/* Custom Scrollbar untuk vibe siber */
+.review-box::-webkit-scrollbar {
+    width: 6px;
+}
+.review-box::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+
+.review-item {
+    text-align: left;
+    padding: 16px 20px;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.review-success {
+    color: var(--accent);
+    border-left: 4px solid var(--accent);
+    box-shadow: inset 5px 0 20px rgba(0, 255, 135, 0.03);
+}
+
+.review-fail {
+    color: #ff6b6b;
+    border-left: 4px solid #ff6b6b;
+    box-shadow: inset 5px 0 20px rgba(255, 107, 107, 0.03);
+}
+
+footer {
+    margin-top: 40px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+@media(max-width: 600px){
+    .banner {
+        flex-direction: column;
+        gap: 15px;
+        margin: 10px;
+        border-radius: 20px;
+    }
+    .card {
+        padding: 25px 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="banner">
+    <h2>SYSTEM ENGAGED</h2>
+    <a href="https://www.tiktok.com/@rahsoastudio?_r=1&_t=ZS-97JCaDpuTqq" target="_blank">
+        TIKTOK
+    </a>
+</div>
+
+<div class="quiz-container">
+    <p class="audio-status"><span>⚡</span> Neural AI Voice feedback active.</p>
+    
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div id="dynamic-quiz-area"></div>
+
+    <div class="card" id="keputusan"></div>
+</div>
+
+<footer>rahsoaSTUDIO &copy; 2026</footer>
+
+<script>
+const bankSoalan = [
+    {
+        kategori: "PIRAMID MAKANAN",
+        tagClass: "cat-pk",
+        soalan: "Berdasarkan rujukan visual piramid di bawah, kumpulan makanan manakah yang terletak di Aras 4 (Puncak) dan wajib diambil dalam kuantiti yang PALING SEDIKIT?",
+        pilihan: ["Lemak, Minyak, Gula & Garam", "Buah-buahan & Sayur-sayuran", "Susu & Produk Tenusu"],
+        jawapan: "Lemak, Minyak, Gula & Garam",
+        imej: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400"
+    },
+    {
+        kategori: "MATEMATIK",
+        tagClass: "cat-matematik",
+        soalan: "Sebuah pek makanan mengandungi 20g Karbohidrat (1g=4 kcal), 10g Protein (1g=4 kcal), dan 5g Lemak (1g=9 kcal). Berapakah jumlah kalori keseluruhan pek makanan tersebut?",
+        pilihan: ["155 kcal", "165 kcal", "175 kcal"],
+        jawapan: "165 kcal",
+        imej: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400"
+    },
+    {
+        kategori: "SAINS",
+        tagClass: "cat-sains",
+        soalan: "Apakah enzim dalam air liur yang bertanggungjawab memulakan pencernaan kimia bagi menguraikan kanji (karbohidrat)?",
+        pilihan: ["Amilasi", "Proteasi", "Lipasi"],
+        jawapan: "Amilasi"
+    },
+    {
+        kategori: "PENDIDIKAN KESIHATAN",
+        tagClass: "cat-pk",
+        soalan: "Mengikut saranan Pinggan Sihat Malaysia, apakah nisbah atau pola pembahagian makanan yang betul bagi Karbohidrat:Protein:Serat?",
+        pilihan: ["Suku : Suku : Separuh", "Separuh : Suku : Suku", "Suku : Separuh : Suku"],
+        jawapan: "Suku : Suku : Separuh",
+        imej: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400"
+    },
+    {
+        kategori: "MATEMATIK",
+        tagClass: "cat-matematik",
+        soalan: "Ali mempunyai berat 60 kg and tinggi 1.5 m. Menggunakan rumus BMI = Berat (kg) / [Tinggi (m) x Tinggi (m)], berapakah nilai BMI Ali?",
+        pilihan: ["24.2 (Berat Normal)", "26.7 (Berlebihan Berat)", "30.1 (Obesiti)"],
+        jawapan: "26.7 (Berlebihan Berat)"
+    },
+    {
+        kategori: "SAINS",
+        tagClass: "cat-sains",
+        soalan: "Mengapakah pengambilan lemak berlebihan, terutamanya lemak trans, boleh meningkatkan risiko penyakit kardiovaskular secara biologi?",
+        pilihan: ["Membentuk plak penyumbat pada dinding arteri darah", "Merendahkan kadar serapan oksigen di paru-paru", "Memusnahkan sel-sel darah merah dalam badan"],
+        jawapan: "Membentuk plak penyumbat pada dinding arteri darah"
+    },
+    {
+        kategori: "PENDIDIKAN KESIHATAN",
+        tagClass: "cat-pk",
+        soalan: "Apakah penyakit tidak berjangkit (NCD) yang kerap dikaitkan dengan pola pemakanan yang tinggi gula secara kronik?",
+        pilihan: ["Diabetes Melitus (Kencing Manis)", "Anemia (Kurang Sel Darah Merah)", "Skurvi (Kekurangan Vitamin C)"],
+        jawapan: "Diabetes Melitus (Kencing Manis)",
+        imej: "https://images.unsplash.com/photo-1589113744321-4f1015f606db?w=400"
+    },
+    {
+        kategori: "SAINS",
+        tagClass: "cat-sains",
+        soalan: "Vitamin manakah yang bersifat larut air dan memerlukan pengambilan harian yang konsisten kerana tidak boleh disimpan di dalam tisu lemak badan?",
+        pilihan: ["Vitamin A dan D", "Vitamin E dan K", "Vitamin B dan C"],
+        jawapan: "Vitamin B dan C"
+    },
+    {
+        kategori: "PENDIDIKAN KESIHATAN",
+        tagClass: "cat-pk",
+        soalan: "Malnutrisi boleh berlaku dalam dua keadaan. Apakah istilah bagi keadaan kekurangan zat makanan yang micronutrient kronik pada kanak-kanak sehingga membantutkan pertumbuhan?",
+        pilihan: ["Kwasiorkor / Marasmus", "Hipertensi", "Obesiti Morbid"],
+        jawapan: "Kwasiorkor / Marasmus"
+    },
+    {
+        kategori: "SAINS / PK",
+        tagClass: "cat-sains",
+        soalan: "Based on the latest Malaysian Food Pyramid, why are vegetables placed at the very bottom (base) compared to carbohydrates?",
+        soalan: "Berdasarkan Piramid Makanan Malaysia terbaharu, mengapakah sayur-sayuran diletakkan di aras paling bawah (dasar) berbanding karbohidrat?",
+        pilihan: ["Mempunyai ketumpatan nutrien tinggi tetapi rendah kalori untuk mencegah NCD", "Membekalkan tenaga segera paling tinggi untuk sel badan", "Mudah dihadam dalam perut kurang daripada 10 minit"],
+        jawapan: "Mempunyai ketumpatan nutrien tinggi tetapi rendah kalori untuk mencegah NCD",
+        imej: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400"
+    }
+];
+
+let soalanRawak = [];
+let jawapanPengguna = {};
+let indeksSemasa = 0;
+
+function sebutTeks(teks) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); 
+        let sebutan = new SpeechSynthesisUtterance(teks);
+        sebutan.lang = 'ms-MY'; 
+        sebutan.rate = 1.0;     
+        window.speechSynthesis.speak(sebutan);
+    }
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function mulakanKuiz() {
+    soalanRawak = shuffleArray([...bankSoalan]);
+    let area = document.getElementById('dynamic-quiz-area');
+    area.innerHTML = ""; 
+    
+    soalanRawak.forEach((item, index) => {
+        let pilihanRawak = shuffleArray([...item.pilihan]);
+        
+        let imejHtml = item.imej ? `<img src="${item.imej}" class="question-img" alt="Visual Kuiz">` : '';
+        
+        let cardHtml = `
+            <div class="card ${index === 0 ? 'active' : ''}" id="card-${index}">
+                <div class="category-tag ${item.tagClass}">${item.kategori}</div>
+                <h1>KOD DATA NOD: 0${index + 1}</h1>
+                <div class="card-question">${item.soalan}</div>
+                ${imejHtml}
+                <div class="options-group">
+                    ${pilihanRawak.map(pilihan => `
+                        <button class="option-btn" onclick="selectOption(${index}, '${pilihan.replace(/'/g, "\\'")}', this)">${pilihan}</button>
+                    `).join('')}
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-next" id="next-${index}" disabled onclick="changeCard(${index})">
+                        ${index === (soalanRawak.length - 1) ? '🏁 PROSES DATA AKHIR' : 'SOALAN SETERUSNYA &rarr;'}
+                    </button>
+                </div>
+            </div>
+        `;
+        area.insertAdjacentHTML('beforeend', cardHtml);
+    });
+
+    document.getElementById('progressBar').style.width = `${(1 / soalanRawak.length) * 100}%`;
+}
+
+function selectOption(index, val, element) {
+    jawapanPengguna[index] = val;
+    let buttons = element.parentElement.querySelectorAll('.option-btn');
+    buttons.forEach(btn => btn.classList.remove('selected'));
+    
+    element.classList.add('selected');
+    document.getElementById(`next-${index}`).disabled = false;
+
+    if(val === soalanRawak[index].jawapan) {
+        sebutTeks("Pilihan yang bagus.");
+    } else {
+        sebutTeks("Pilihan dipilih.");
+    }
+}
+
+function changeCard(current) {
+    if (current === (soalanRawak.length - 1)) {
+        periksaJawapan();
+        return;
+    }
+    
+    document.getElementById(`card-${current}`).classList.remove('active');
+    let next = current + 1;
+    document.getElementById(`card-${next}`).classList.add('active');
+    
+    let percentage = ((next + 1) / soalanRawak.length) * 100;
+    document.getElementById('progressBar').style.width = `${percentage}%`;
+}
+
+function periksaJawapan(){
+    let markah = 0;
+    let ulasanHtml = "";
+    let totalSoalan = soalanRawak.length;
+
+    soalanRawak.forEach((item, i) => {
+        if(jawapanPengguna[i] === item.jawapan){
+            markah++;
+            ulasanHtml += `<div class="review-item review-success">✓ DATA NOD 0${i+1} SEMPURNA</div>`;
+        } else {
+            ulasanHtml += `<div class="review-item review-fail">✗ DATA NOD 0${i+1} ANOMALI (Jawapan: ${item.jawapan})</div>`;
+        }
+    });
+
+    document.getElementById(`card-${totalSoalan-1}`).classList.remove('active');
+    document.getElementById('progressBar').style.width = '100%';
+
+    let keputusanCard = document.getElementById("keputusan");
+    keputusanCard.classList.add('active');
+    
+    let ulasanMesej = "";
+    let teksSuara = "";
+
+    if(markah === totalSoalan) {
+        ulasanMesej = "INTELLIGENCE OVERFLOW! Anda Pakar Nutrisi Tahap Siber! 👑";
+        teksSuara = `Tahniah! Luar biasa. Anda mendapat markah penuh ${totalSoalan} per ${totalSoalan}. Anda memang pakar pemakanan yang bijak!`;
+    } else if(markah >= (totalSoalan * 0.7)) {
+        ulasanMesej = "SINKRONISASI TINGGI! Analisis Sistem Amat Memberangsangkan! 🎉";
+        teksSuara = `Tahniah! Keputusan anda sangat memberangsangkan dengan markah ${markah} per ${totalSoalan}. Teruskan gaya hidup sihat!`;
+    } else {
+        ulasanMesej = "REBOOT DIPERLUKAN! Mari tingkatkan sistem pemahaman bio-sains anda! 👍";
+        teksSuara = `Anda mendapat markah ${markah} per ${totalSoalan}. Jangan putus asa, mari cuba lagi untuk tingkatkan pengetahuan anda.`;
+    }
+
+    keputusanCard.innerHTML = `
+        <div class="category-tag" style="background:rgba(0, 242, 254, 0.1); color:var(--primary);">HASIL ANALISIS</div>
+        <h1>MATRIKS KEPUTUSAN</h1>
+        <div class="score-badge">${markah}/${totalSoalan}</div>
+        <p style="font-size:1.05rem; font-weight:700; color:#cbd5e1; margin-bottom: 20px; line-height:1.5;">${ulasanMesej}</p>
+        <div class="review-box">${ulasanHtml}</div>
+        <button class="btn" style="margin-top:10px; width:100%; background: linear-gradient(135deg, #00ff87, #60efff); color:#060b19;" onclick="window.location.reload()">RE-INITIALIZE COGNITIVE CORE 🔄</button>
+    `;
+
+    sebutTeks(teksSuara);
+}
+
+window.onload = mulakanKuiz;
+</script>
+
+</body>
+</html>
